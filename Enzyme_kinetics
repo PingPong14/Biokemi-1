@@ -1,0 +1,52 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Funktion för att hitta det närmaste S-värdet för ett givet V0
+def find_closest_S(data, target_V0):
+    # Omvandla data till en DataFrame
+    df = pd.DataFrame(data)
+
+    # Beräkna skillnaden mellan det givna V0 och alla värden i V0-kolumnen
+    df['Difference'] = abs(df['V0'] - target_V0)
+
+    # Hitta raden med den minsta skillnaden (dvs. närmaste V0)
+    closest_row = df.loc[df['Difference'].idxmin()]
+
+    # Hämta motsvarande S-värde
+    closest_S = closest_row['S']
+
+    return closest_S, closest_row
+
+# Skapa data
+data = {
+    'S': [1.25e-13, 2.5e-13, 5.55556e-13, 1e-12, 2.5e-12, 3.5e-12],
+    'V0': [6.00e-07, 9.00e-07, 1.00e-06, 1.00e-06, 6.00e-07, 1.00e-06]
+}
+
+# Sätt det givna V0-värdet
+target_V0 = (0.5*0.000001)  # Exempelvärde
+
+# Hitta närmaste S-värde
+closest_S, closest_row = find_closest_S(data, target_V0)
+
+# Plotting
+plt.figure(figsize=(8, 6))
+plt.scatter(data['S'], data['V0'], color='blue', label='Data Points')
+
+# Markera närmaste punkt
+plt.scatter(closest_S, target_V0, color='red', label=f'Closest point: S={closest_S}, V0={target_V0}')
+
+# Lägg till etiketter
+plt.title('Graf över S och V0')
+plt.xlabel('S')
+plt.ylabel('V0')
+plt.legend()
+
+# Visa grafen
+plt.grid(True)
+plt.show()
+
+# Skriv ut närmaste punkt
+print(f"För V0 = {target_V0} är det närmaste S-värdet: {closest_S}")
+print("Närmaste punkt: ", closest_row)
